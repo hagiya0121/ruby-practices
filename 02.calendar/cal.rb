@@ -13,7 +13,7 @@ week_day = Date.new(year, month, 1).wday
 last_day = Date.new(year, month, -1).day
 first_weekday_offset = week_day * 3
 
-puts Date.today.strftime("%-m月 %Y").center(20)
+puts "#{month}月 #{year}".center(20)
 puts "日 月 火 水 木 金 土"
 print "\s" * first_weekday_offset
 (1..last_day).each do |day|
