@@ -17,7 +17,8 @@ puts "#{month}月 #{year}".center(20)
 puts "日 月 火 水 木 金 土"
 print "\s" * first_weekday_offset
 (1..last_day).each do |day|
-  day = "\e[7m#{day}\e[0m" if day == today
+  is_today = today.year == year && today.month == month && today.day == day
+  day = "\e[7m#{day}\e[0m" if is_today
   print "#{day}".rjust(2) + "\s"
   puts "\n" if week_day == 6
   week_day == 6 ? week_day = 0 : week_day += 1
