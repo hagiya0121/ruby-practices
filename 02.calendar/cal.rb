@@ -12,3 +12,4 @@ print "\s" * first_weekday_offset
   puts "\n" if week_day == 6
   week_day == 6 ? week_day = 0 : week_day += 1
 end
+puts "\n\n" 
