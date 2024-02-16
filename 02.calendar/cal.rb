@@ -1,8 +1,14 @@
 require 'date'
+require 'optparse'
 
-week_day = Date.new(2024, 2, 1).wday
-last_day = Date.new(2024, 2, -1).day
-today = Date.today.day
+today = Date.today
+month = today.month
+opt = OptionParser.new
+opt.on("-m","--month MONTH", Integer, "月を指定") { |m| month = m }
+opt.parse!(ARGV)
+
+week_day = Date.new(2024, month, 1).wday
+last_day = Date.new(2024, month, -1).day
 first_weekday_offset = week_day * 3
 
 puts Date.today.strftime("%-m月 %Y").center(20)
