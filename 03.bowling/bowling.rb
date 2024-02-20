@@ -19,14 +19,15 @@ end
 
 strike_count = 0
 point = 0
-numeric_scores = scores.map { |s| s == 'X' ? 10 : s.to_i }
-frames.each.with_index(1) do |frame, index|
-  throw_count = index * 2 - (strike_count + 1)
-  if frame[0] == 10 && index <= 9  # strike
+shot_scores = scores.map { |s| s == 'X' ? 10 : s.to_i }
+frames.each.with_index(1) do |frame, frame_number|
+  # 現在のフレームの1投目が全体の何投目かを計算
+  shot_count = frame_number * 2 - (strike_count + 1)
+  if frame[0] == 10 && frame_number <= 9  # strike
     strike_count += 1
-    point +=  10 + numeric_scores[throw_count] + numeric_scores[throw_count + 1]
-  elsif frame.sum == 10 && index <= 9 # spare
-    point += 10 + numeric_scores[throw_count + 1]
+    point +=  10 + shot_scores[shot_count] + shot_scores[shot_count + 1]
+  elsif frame.sum == 10 && frame_number <= 9 # spare
+    point += 10 + shot_scores[shot_count + 1]
   else
     point += frame.sum
   end
