@@ -1,6 +1,6 @@
-# frozen_string_literal: true
+#!/usr/bin/env ruby
 
-# !/usr/bin/env ruby
+# frozen_string_literal: true
 
 input_score = ARGV[0]
 scores = input_score.split(',').map { |s| s == 'X' ? 10 : s.to_i }
