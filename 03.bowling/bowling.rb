@@ -11,12 +11,16 @@ scores.each.with_index do |score, index|
   next if frame == 9
 
   shot_count += 1
-  if shot_count == 2
-    point += scores[index + 1] if scores[index] + scores[index - 1] == 10
-    frame += 1
-    shot_count = 0
-  elsif score == 10
+
+  if shot_count == 1 && score == 10
     point += scores[index + 1] + scores[index + 2]
+  end
+
+  if shot_count == 2 && scores[index] + scores[index - 1] == 10
+    point += scores[index + 1]
+  end
+
+  if shot_count == 2 || score == 10
     frame += 1
     shot_count = 0
   end
