@@ -1,7 +1,9 @@
-#!/usr/bin/env ruby
+# frozen_string_literal: true
 
-score = ARGV[0]
-scores = score.split(',').map { |s| s == 'X' ? 10 : s.to_i }
+# !/usr/bin/env ruby
+
+input_score = ARGV[0]
+scores = input_score.split(',').map { |s| s == 'X' ? 10 : s.to_i }
 
 current_frame = 0
 shot_count = 0
@@ -12,13 +14,9 @@ scores.each.with_index do |score, index|
 
   shot_count += 1
 
-  if shot_count == 1 && score == 10
-    total_points += scores[index + 1] + scores[index + 2]
-  end
+  total_points += scores[index + 1] + scores[index + 2] if shot_count == 1 && score == 10
 
-  if shot_count == 2 && scores[index] + scores[index - 1] == 10
-    total_points += scores[index + 1]
-  end
+  total_points += scores[index + 1] if shot_count == 2 && scores[index] + scores[index - 1] == 10
 
   if shot_count == 2 || score == 10
     current_frame += 1
