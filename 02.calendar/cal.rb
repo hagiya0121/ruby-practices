@@ -17,7 +17,7 @@ last_date = Date.new(options[:year], options[:month], -1)
 print " " * first_date.wday * 3
 (first_date..last_date).each do |date|
   if date == today
-    print "\e[7m#{date.day}\e[0m"
+    print "\e[7m#{date.day}\e[0m".rjust(2) + " "
   else
     print "#{date.day}".rjust(2) + " "
   end
