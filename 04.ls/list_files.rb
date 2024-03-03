@@ -8,3 +8,10 @@ slice_files = []
 files.each_slice(col_files) do |file|
   slice_files << file
 end
+
+col_files.times do |col|
+  column.times do |row|
+    print slice_files[row][col], " "
+  end
+  puts
+end
