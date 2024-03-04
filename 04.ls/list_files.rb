@@ -1,6 +1,10 @@
 #!/usr/bin/env ruby
 
-ARGV[0].nil? ? file_path = './' : file_path = ARGV[0]
+file_path = ARGV[0] || './'
+if File.file?(file_path)
+  puts file_path
+  exit
+end
 files = Dir.entries(file_path).sort.delete_if {|file| file.start_with?('.')}
 column = 3
 col_files = files.size % column == 0 ? files.size / column : files.size / column + 1
