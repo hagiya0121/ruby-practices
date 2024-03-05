@@ -3,23 +3,24 @@
 file_path = ARGV[0] || './'
 (puts file_path; exit) if File.file?(file_path)
 
-files = Dir.entries(file_path).sort.delete_if {|file| file.start_with?('.')}
-exit if files.size == 0
-
-def max_length(files)
-  files.max_by {|name| name.length}.length
+def get_directory_files(file_path)
+  Dir.entries(file_path).sort.delete_if {|file| file.start_with?('.')}
 end
 
-def print_files(files, column)
-  output_rows = files.size % column == 0 ? files.size / column : files_count / column + 1
-  slice_files = files.each_slice(output_rows).to_a
+files = get_directory_files(file_path)
+exit if files.empty?
 
-  output_rows.times do |col|
-    slice_files.size.times do |row|
-      print slice_files[row][col]&.ljust(max_length(files) + 4)
+def print_files(files, column)
+  row_count = (files.size.to_f / column).ceil
+  max_length = files.max_by {|name| name.length}.length
+  row_count.times do |index|
+    column.times do
+      print files[index]&.ljust(max_length + 4)
+      index += row_count
     end
     puts
   end
 end
 
 print_files(files, 3)
+
