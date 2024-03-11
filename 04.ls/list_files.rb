@@ -1,6 +1,9 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+PADDING = 4
+COLUMN = 3
+
 file_path = ARGV[0] || './'
 if File.file?(file_path)
   puts file_path
@@ -19,11 +22,11 @@ def print_files(files, column)
   max_length = files.max_by(&:length).length
   row_count.times do |index|
     column.times do
-      print files[index]&.ljust(max_length + 4)
+      print files[index]&.ljust(max_length + PADDIN)
       index += row_count
     end
     puts
   end
 end
 
-print_files(files, 3)
+print_files(files, COLUMN)
