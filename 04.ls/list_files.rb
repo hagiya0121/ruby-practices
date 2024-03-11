@@ -8,7 +8,7 @@ if File.file?(file_path)
 end
 
 def get_directory_files(file_path)
-  Dir.entries(file_path).sort.delete_if { |file| file.start_with?('.') }
+  Dir.chdir(file_path) { Dir.glob('*').sort }
 end
 
 files = get_directory_files(file_path)
