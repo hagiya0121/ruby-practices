@@ -22,7 +22,7 @@ def print_files(files, column)
   max_length = files.max_by(&:length).length
   row_count.times do |index|
     column.times do
-      print files[index]&.ljust(max_length + PADDIN)
+      print files[index]&.ljust(max_length + PADDING)
       index += row_count
     end
     puts
