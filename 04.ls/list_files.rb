@@ -25,11 +25,11 @@ def get_directory_files_all(file_path)
   Dir.entries(file_path).sort
 end
 
-if options[:all]
-  files = get_directory_files_all(file_path)
-else
-  files = get_directory_files(file_path)
-end
+files = if options[:all]
+          get_directory_files_all(file_path)
+        else
+          get_directory_files(file_path)
+        end
 exit if files.empty?
 
 def print_files(files, column)
