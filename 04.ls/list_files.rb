@@ -21,12 +21,8 @@ def get_directory_files(file_path)
   Dir.chdir(file_path) { Dir.glob('*').sort }
 end
 
-def get_directory_files_all(file_path)
-  Dir.entries(file_path).sort
-end
-
 files = if options[:all]
-          get_directory_files_all(file_path)
+          Dir.entries(file_path).sort
         else
           get_directory_files(file_path)
         end
