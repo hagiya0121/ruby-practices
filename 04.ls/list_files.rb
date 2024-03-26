@@ -17,14 +17,10 @@ if File.file?(file_path)
   exit
 end
 
-def get_directory_files(file_path)
-  Dir.chdir(file_path) { Dir.glob('*').sort }
-end
-
 files = if options[:all]
           Dir.entries(file_path).sort
         else
-          get_directory_files(file_path)
+          Dir.chdir(file_path) { Dir.glob('*').sort }
         end
 exit if files.empty?
 
