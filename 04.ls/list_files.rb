@@ -1,8 +1,15 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require 'optparse'
+
 PADDING = 4
 COLUMN = 3
+
+options = { all: false }
+opt = OptionParser.new
+opt.on('-a') { |v| options[:all] = v }
+opt.parse!(ARGV)
 
 file_path = ARGV[0] || './'
 if File.file?(file_path)
@@ -10,11 +17,11 @@ if File.file?(file_path)
   exit
 end
 
-def get_directory_files(file_path)
-  Dir.chdir(file_path) { Dir.glob('*').sort }
-end
-
-files = get_directory_files(file_path)
+files = if options[:all]
+          Dir.entries(file_path).sort
+        else
+          Dir.chdir(file_path) { Dir.glob('*').sort }
+        end
 exit if files.empty?
 
 def print_files(files, column)
