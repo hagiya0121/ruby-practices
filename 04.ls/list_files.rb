@@ -6,9 +6,10 @@ require 'optparse'
 PADDING = 4
 COLUMN = 3
 
-options = { all: false }
+options = { all: false, reverse: false }
 opt = OptionParser.new
 opt.on('-a') { |v| options[:all] = v }
+opt.on('-r') { |v| options[:reverse] = v }
 opt.parse!(ARGV)
 
 file_path = ARGV[0] || './'
@@ -22,6 +23,7 @@ files = if options[:all]
         else
           Dir.chdir(file_path) { Dir.glob('*').sort }
         end
+files.reverse! if options[:reverse]
 exit if files.empty?
 
 def print_files(files, column)
