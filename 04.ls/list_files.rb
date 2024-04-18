@@ -28,19 +28,21 @@ files = if options[:all]
           Dir.chdir(file_path) { Dir.glob('*').sort }
         end
 
-def convert_permission_to_symbol(file)
-  numeric_permission = File::Stat.new(file).mode.to_s(8)[-3..]
+def get_permission(file_stat)
+  numeric_permission = file_stat.mode.to_s(8)[-3..]
   numeric_permission.chars.map { |char| PERMISSION_SYMBOLS[char.to_i] }.join
 end
 
-def convert_filetype_to_symbol(file)
-  file_type = File::Stat.new(file).ftype.to_sym
+def get_filetype(file_stat)
+  file_type = file_stat.ftype.to_sym
   FILETYPE_SYMBOLS[file_type]
 end
 
 Dir.chdir(file_path) do
   files.each do |file|
-    puts convert_filetype_to_symbol(file) + convert_permission_to_symbol(file)
+    file_stat = File::Stat.new(file)
+    puts mode = get_filetype(file_stat) + get_permission(file_stat)
+    puts link_count = file_stat.nlink
   end
 end
 
