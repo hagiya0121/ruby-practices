@@ -47,6 +47,7 @@ Dir.chdir(file_path) do
     puts owner = Etc.getpwuid(file_stat.uid).name
     puts group = Etc.getgrgid(file_stat.gid).name
     puts size = file_stat.size
+    puts time = file_stat.atime.strftime('%-m %-d %H:%M')
   end
 end
 
