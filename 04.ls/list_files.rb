@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require 'optparse'
+require 'etc'
 
 PADDING = 4
 COLUMN = 3
@@ -42,7 +43,10 @@ Dir.chdir(file_path) do
   files.each do |file|
     file_stat = File::Stat.new(file)
     puts mode = get_filetype(file_stat) + get_permission(file_stat)
-    puts link_count = file_stat.nlink
+    puts link = file_stat.nlink
+    puts owner = Etc.getpwuid(file_stat.uid).name
+    puts group = Etc.getgrgid(file_stat.gid).name
+    puts size = file_stat.size
   end
 end
 
