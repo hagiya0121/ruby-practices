@@ -29,25 +29,30 @@ files = if options[:all]
           Dir.chdir(file_path) { Dir.glob('*').sort }
         end
 
-def get_permission(file_stat)
-  numeric_permission = file_stat.mode.to_s(8)[-3..]
-  numeric_permission.chars.map { |char| PERMISSION_SYMBOLS[char.to_i] }.join
-end
-
-def get_filetype(file_stat)
-  file_type = file_stat.ftype.to_sym
-  FILETYPE_SYMBOLS[file_type]
-end
+file_stats = {
+  modes: [],
+  sizes: [],
+  links: [],
+  owners: [],
+  groups: [],
+  times: [],
+  blocks: []
+}
 
 Dir.chdir(file_path) do
   files.each do |file|
     file_stat = File::Stat.new(file)
-    puts mode = get_filetype(file_stat) + get_permission(file_stat)
-    puts link = file_stat.nlink
-    puts owner = Etc.getpwuid(file_stat.uid).name
-    puts group = Etc.getgrgid(file_stat.gid).name
-    puts size = file_stat.size
-    puts time = file_stat.atime.strftime('%-m %-d %H:%M')
+    permission = file_stat.mode.to_s(8)[-3..]
+    symbolic_permission = permission.chars.map { |char| PERMISSION_SYMBOLS[char.to_i] }.join
+    file_type = file_stat.ftype.to_sym
+    symbolic_filetype = FILETYPE_SYMBOLS[file_type]
+    file_stats[:modes] << symbolic_filetype + symbolic_permission
+    file_stats[:sizes] << file_stat.size
+    file_stats[:links] << file_stat.nlink
+    file_stats[:owners] << Etc.getpwuid(file_stat.uid).name
+    file_stats[:groups] << Etc.getgrgid(file_stat.gid).name
+    file_stats[:times] << file_stat.atime.strftime('%-m %-d %H:%M')
+    file_stats[:blocks] << file_stat.blocks
   end
 end
 
