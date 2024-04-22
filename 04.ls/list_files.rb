@@ -29,53 +29,46 @@ files = if options[:all]
           Dir.chdir(file_path) { Dir.glob('*').sort }
         end
 
-def print_long_files(file_stats)
-  max_length = ->(key) { file_stats.map { |stat| stat[key].length }.max }
-  max_length_link = max_length.call(:link)
-  max_length_size = max_length.call(:size)
-  max_length_owner = max_length.call(:owner)
-  max_length_group = max_length.call(:group)
-  max_length_time = max_length.call(:time)
-
-  puts "total #{file_stats.sum { |stat| stat[:block] }}"
-  file_stats.each do |stat|
-    mode = stat[:mode]
-    link = stat[:link].rjust(max_length_link)
-    owner = stat[:owner].ljust(max_length_owner)
-    group = stat[:group].ljust(max_length_group)
-    size = stat[:size].rjust(max_length_size)
-    time = stat[:time].rjust(max_length_time)
-    name = stat[:name]
-    puts "#{mode}  #{link} #{owner}  #{group}  #{size}  #{time} #{name}"
-  end
-end
-
-file_stats = []
-
-Dir.chdir(file_path) do
-  files.each do |file|
-    file_stat = File::Stat.new(file)
-    permission = file_stat.mode.to_s(8)[-3..]
-    symbolic_permission = permission.chars.map { |char| PERMISSION_SYMBOLS[char.to_i] }.join
-    file_type = file_stat.ftype.to_sym
-    symbolic_filetype = FILETYPE_SYMBOLS[file_type]
-
-    file_stats << {
-      mode: symbolic_filetype + symbolic_permission,
-      size: file_stat.size.to_s,
-      link: file_stat.nlink.to_s,
-      owner: Etc.getpwuid(file_stat.uid).name,
-      group: Etc.getgrgid(file_stat.gid).name,
-      time: file_stat.atime.strftime('%-m %e %H:%M'),
-      block: file_stat.blocks,
-      name: file
-    }
-  end
-  print_long_files(file_stats)
-end
-
 files.reverse! if options[:reverse]
 exit if files.empty?
+
+def get_file_stats(file)
+  file_stat = File.lstat(file)
+  permission = file_stat.mode.to_s(8)[-3..]
+  symbolic_permission = permission.chars.map { |char| PERMISSION_SYMBOLS[char.to_i] }.join
+  file_type = file_stat.ftype.to_sym
+  {
+    block: file_stat.blocks,
+    mode: FILETYPE_SYMBOLS[file_type] + symbolic_permission,
+    link: file_stat.nlink.to_s,
+    owner: Etc.getpwuid(file_stat.uid).name,
+    group: Etc.getgrgid(file_stat.gid).name,
+    size: file_stat.size.to_s,
+    time: file_stat.atime.strftime('%-m %e %H:%M'),
+    name: file_type == :link ? "#{file} -> #{File.readlink(file)}" : file
+  }
+end
+
+def get_max_lengths(file_stats)
+  keys = %i[link owner group size time]
+  keys.map do |key|
+    [key, file_stats.map { |stat| stat[key].length }.max]
+  end.to_h
+end
+
+def print_long_files(file_stats)
+  max_lengths = get_max_lengths(file_stats)
+  puts "total #{file_stats.sum { |stat| stat[:block] }}"
+  file_stats.each do |stat|
+    puts  "#{stat[:mode]}\s\s" \
+          "#{stat[:link].rjust(max_lengths[:link])}\s" \
+          "#{stat[:owner].ljust(max_lengths[:owner])}\s\s" \
+          "#{stat[:group].ljust(max_lengths[:group])}\s\s" \
+          "#{stat[:size].rjust(max_lengths[:size])}\s\s" \
+          "#{stat[:time]}\s" \
+          "#{stat[:name]}"
+  end
+end
 
 def print_files(files, column)
   row_count = (files.size.to_f / column).ceil
@@ -89,4 +82,11 @@ def print_files(files, column)
   end
 end
 
-# print_files(files, COLUMN)
+if options[:long]
+  Dir.chdir(file_path) do
+    file_stats = files.map { |file| get_file_stats(file) }
+    print_long_files(file_stats)
+  end
+else
+  print_files(files, COLUMN)
+end
