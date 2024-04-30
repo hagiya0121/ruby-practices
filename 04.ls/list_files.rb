@@ -32,6 +32,17 @@ files = if options[:all]
 files.reverse! if options[:reverse]
 exit if files.empty?
 
+def main(options, files, file_path)
+  if options[:long]
+    Dir.chdir(file_path) do
+      file_stats = files.map { |file| get_file_stats(file) }
+      print_long_files(file_stats)
+    end
+  else
+    print_files(files, COLUMN)
+  end
+end
+
 def get_file_stats(file)
   file_stat = File.lstat(file)
   permission = file_stat.mode.to_s(8)[-3..]
@@ -49,13 +60,6 @@ def get_file_stats(file)
   }
 end
 
-def get_max_lengths(file_stats)
-  keys = %i[link owner group size time]
-  keys.map do |key|
-    [key, file_stats.map { |stat| stat[key].length }.max]
-  end.to_h
-end
-
 def print_long_files(file_stats)
   max_lengths = get_max_lengths(file_stats)
   puts "total #{file_stats.sum { |stat| stat[:block] }}"
@@ -70,6 +74,13 @@ def print_long_files(file_stats)
   end
 end
 
+def get_max_lengths(file_stats)
+  keys = %i[link owner group size time]
+  keys.map do |key|
+    [key, file_stats.map { |stat| stat[key].length }.max]
+  end.to_h
+end
+
 def print_files(files, column)
   row_count = (files.size.to_f / column).ceil
   max_length = files.max_by(&:length).length
@@ -82,11 +93,4 @@ def print_files(files, column)
   end
 end
 
-if options[:long]
-  Dir.chdir(file_path) do
-    file_stats = files.map { |file| get_file_stats(file) }
-    print_long_files(file_stats)
-  end
-else
-  print_files(files, COLUMN)
-end
+main(options, files, file_path)
