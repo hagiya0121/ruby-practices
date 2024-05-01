@@ -15,28 +15,29 @@ opt.parse!(ARGV)
 options.each_key { |key| options[key] = true } if options.values.none?
 
 def main(options)
-  print_file_count(options)
+  results = ARGV.map { |file_path| calc_word_count(file_path, options) }
+  print_word_count(results)
 end
 
-def print_file_count(options)
-  results = ARGV.map {|path| calc_file_count(path, options)}
-  results.each_with_index do |e, i|
-    puts e.map { |a| a.to_s.rjust(PADDING) }.join + "\s#{ARGV[i]}"
+def print_word_count(results)
+  results.each_with_index do |result, index|
+    puts result.map { |e| e.to_s.rjust(PADDING) }.join + "\s#{ARGV[index]}"
   end
-  puts results.transpose.map {|a| a.sum.to_s.rjust(PADDING)}.join + "\stotal"
+  puts "#{results.transpose.map { |column_values| column_values.sum.to_s.rjust(PADDING) }.join}\stotal"
 end
 
-def calc_file_count(file_path, options)
+def calc_word_count(file_path, options)
   results = []
+  word_counts = { lines: 0, words: 0, bytes: 0 }
   File.open(file_path, 'r') do |file|
-    file_counts = { lines: 0, words: 0, bytes: file.size }
+    word_counts[:bytes] = file.size
     file.each_line do |line|
-      file_counts[:words] += line.split(' ').size
-      file_counts[:lines] += 1
+      word_counts[:words] += line.split(' ').size
+      word_counts[:lines] += 1
     end
-    results << file_counts[:lines] if options[:line]
-    results << file_counts[:words] if options[:word]
-    results << file_counts[:bytes] if options[:char]
+    results << word_counts[:lines] if options[:line]
+    results << word_counts[:words] if options[:word]
+    results << word_counts[:bytes] if options[:char]
   end
   results
 end
