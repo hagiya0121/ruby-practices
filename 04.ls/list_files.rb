@@ -10,29 +10,16 @@ PERMISSION_SYMBOLS = ['---', '--x', '-w-', '-wx', 'r--', 'r-x', 'rw-', 'rwx'].fr
 FILETYPE_SYMBOLS = { file: '-', directory: 'd', link: 'l', characterSpecial: 'c',
                      blockSpecial: 'b', fifo: 'p', socket: 's' }.freeze
 
-options = { all: false, reverse: false, long: false }
-opt = OptionParser.new
-opt.on('-a') { |v| options[:all] = v }
-opt.on('-r') { |v| options[:reverse] = v }
-opt.on('-l') { |v| options[:long] = v }
-opt.parse!(ARGV)
+def main
+  options = parse_options
+  file_path = ARGV[0] || './'
+  if File.file?(file_path)
+    puts file_path
+    exit
+  end
+  files = get_files(file_path, options)
+  exit if files.empty?
 
-file_path = ARGV[0] || './'
-if File.file?(file_path)
-  puts file_path
-  exit
-end
-
-files = if options[:all]
-          Dir.entries(file_path).sort
-        else
-          Dir.chdir(file_path) { Dir.glob('*').sort }
-        end
-
-files.reverse! if options[:reverse]
-exit if files.empty?
-
-def main(options, files, file_path)
   if options[:long]
     Dir.chdir(file_path) do
       file_stats = files.map { |file| get_file_stats(file) }
@@ -41,6 +28,26 @@ def main(options, files, file_path)
   else
     print_files(files, COLUMN)
   end
+end
+
+def parse_options
+  options = { all: false, reverse: false, long: false }
+  opt = OptionParser.new
+  opt.on('-a') { |v| options[:all] = v }
+  opt.on('-r') { |v| options[:reverse] = v }
+  opt.on('-l') { |v| options[:long] = v }
+  opt.parse!(ARGV)
+  options
+end
+
+def get_files(file_path, options)
+  files = if options[:all]
+            Dir.entries(file_path).sort
+          else
+            Dir.chdir(file_path) { Dir.glob('*').sort }
+          end
+  files.reverse! if options[:reverse]
+  files
 end
 
 def get_file_stats(file)
@@ -93,4 +100,4 @@ def print_files(files, column)
   end
 end
 
-main(options, files, file_path)
+main
