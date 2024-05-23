@@ -13,7 +13,7 @@ FILETYPE_SYMBOLS = { file: '-', directory: 'd', link: 'l', characterSpecial: 'c'
 def main
   options = parse_options
   file_path = ARGV[0] || './'
-  check_file_path(file_path, options)
+  print_file(file_path, options) if File.file?(file_path)
   files = get_files(file_path, options)
   exit if files.empty?
 
@@ -37,9 +37,7 @@ def parse_options
   options
 end
 
-def check_file_path(file_path, options)
-  return unless File.file?(file_path)
-
+def print_file(file_path, options)
   if options[:long]
     file_stat = get_file_stats(file_path)
     print_long_files([file_stat])
