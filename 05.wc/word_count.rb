@@ -5,32 +5,28 @@ require 'optparse'
 
 PADDING = 8
 
-options = { line: false, word: false, char: false }
-opt = OptionParser.new
-opt.on('-l') { |v| options[:line] = v }
-opt.on('-w') { |v| options[:word] = v }
-opt.on('-c') { |v| options[:char] = v }
-opt.parse!(ARGV)
-options.each_key { |key| options[key] = true } if options.values.none?
-
-def main(options)
+def main
+  options = parse_options
+  options.each_key { |key| options[key] = true } if options.values.none?
   results = if ARGV.empty?
               calc_word_count(readlines, options)
             else
               ARGV.map do |file_path|
-                lines = read_file(file_path)
+                lines = File.readlines(file_path)
                 calc_word_count(lines, options)
               end
             end
   print_word_count(results)
 end
 
-def read_file(file_path)
-  lines = []
-  File.open(file_path, 'r') do |file|
-    file.each_line { |line| lines << line }
-  end
-  lines
+def parse_options
+  options = { line: false, word: false, char: false }
+  opt = OptionParser.new
+  opt.on('-l') { |v| options[:line] = v }
+  opt.on('-w') { |v| options[:word] = v }
+  opt.on('-c') { |v| options[:char] = v }
+  opt.parse!(ARGV)
+  options
 end
 
 def calc_word_count(lines, options)
@@ -53,4 +49,4 @@ def print_word_count(results)
   puts "#{results.transpose.map { |e| e.sum.to_s.rjust(PADDING) }.join}\stotal"
 end
 
-main(options)
+main
