@@ -16,7 +16,7 @@ def main
                 lines = File.readlines(file_path)
                 calc_word_count(lines, options)
               end
-    print_word_count(results)
+    print_word_count(results, ARGV)
   end
 end
 
@@ -38,12 +38,12 @@ def calc_word_count(lines, options)
   results
 end
 
-def print_word_count(results)
+def print_word_count(results, file_names)
   results.each_with_index do |result, index|
-    puts result.map { |e| e.to_s.rjust(PADDING) }.join + "\s#{ARGV[index]}"
+    puts result.map { |e| e.to_s.rjust(PADDING) }.join + "\s#{file_names[index]}"
   end
 
-  return unless results.size > 1
+  return if results.size <= 1
 
   puts "#{results.transpose.map { |e| e.sum.to_s.rjust(PADDING) }.join}\stotal"
 end
