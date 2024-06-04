@@ -13,9 +13,9 @@ def main
     print_input_word_count(results)
   else
     results = ARGV.map do |file_path|
-                lines = File.readlines(file_path)
-                calc_word_count(lines, options)
-              end
+      lines = File.readlines(file_path)
+      calc_word_count(lines, options)
+    end
     print_word_count(results, ARGV)
   end
 end
