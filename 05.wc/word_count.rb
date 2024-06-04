@@ -8,15 +8,16 @@ PADDING = 8
 def main
   options = parse_options
   options.each_key { |key| options[key] = true } if options.values.none?
-  results = if ARGV.empty?
-              calc_word_count(readlines, options)
-            else
-              ARGV.map do |file_path|
+  if ARGV.empty?
+    results = calc_word_count(readlines, options)
+    print_input_word_count(results)
+  else
+    results = ARGV.map do |file_path|
                 lines = File.readlines(file_path)
                 calc_word_count(lines, options)
               end
-            end
-  print_word_count(results)
+    print_word_count(results)
+  end
 end
 
 def parse_options
@@ -38,8 +39,6 @@ def calc_word_count(lines, options)
 end
 
 def print_word_count(results)
-  return puts results.map { |e| e.to_s.rjust(PADDING) }.join if ARGV.empty?
-
   results.each_with_index do |result, index|
     puts result.map { |e| e.to_s.rjust(PADDING) }.join + "\s#{ARGV[index]}"
   end
@@ -47,6 +46,10 @@ def print_word_count(results)
   return unless results.size > 1
 
   puts "#{results.transpose.map { |e| e.sum.to_s.rjust(PADDING) }.join}\stotal"
+end
+
+def print_input_word_count(results)
+  puts results.map { |e| e.to_s.rjust(PADDING) }.join
 end
 
 main
