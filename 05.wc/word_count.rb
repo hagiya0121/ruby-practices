@@ -10,7 +10,7 @@ def main
   options.each_key { |key| options[key] = true } if options.values.none?
   if ARGV.empty?
     results = calc_word_count(readlines, options)
-    print_input_word_count(results)
+    puts format_results(results)
   else
     results = ARGV.map do |file_path|
       lines = File.readlines(file_path)
@@ -38,18 +38,18 @@ def calc_word_count(lines, options)
   results
 end
 
+def format_results(results)
+  results.map { |e| e.to_s.rjust(PADDING) }.join
+end
+
 def print_word_count(results, file_names)
   results.each_with_index do |result, index|
-    puts result.map { |e| e.to_s.rjust(PADDING) }.join + "\s#{file_names[index]}"
+    puts format_results(result) + "\s#{file_names[index]}"
   end
 
   return if results.size <= 1
 
   puts "#{results.transpose.map { |e| e.sum.to_s.rjust(PADDING) }.join}\stotal"
-end
-
-def print_input_word_count(results)
-  puts results.map { |e| e.to_s.rjust(PADDING) }.join
 end
 
 main
