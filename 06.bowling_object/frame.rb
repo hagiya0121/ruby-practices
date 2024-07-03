@@ -10,10 +10,14 @@ class Frame
   end
 
   def score
-    total_point = @first_shot.score + @second_shot.score + @third_shot.score
-    return total_point unless @third_shot.mark.nil?
-    return 'strike' if @first_shot.mark == 'X'
+    @first_shot.score + @second_shot.score + @third_shot.score
+  end
 
-    total_point == 10 ? 'spare' : total_point
+  def strike?
+    @first_shot.mark == 'X'
+  end
+
+  def spare?
+    @first_shot.score + @second_shot.score == 10 && !@second_shot.mark.nil?
   end
 end
