@@ -29,7 +29,7 @@ class Game
 
     marks = marks.split(',')
     LAST_FRAME.times do
-      if marks[index] == 'X'
+      if Shot.new(marks[index]).score == 10
         frames << [marks[index]]
         index += 1
       else
