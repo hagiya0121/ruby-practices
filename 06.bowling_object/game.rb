@@ -3,8 +3,8 @@
 class Game
   LAST_FRAME = 9
 
-  def initialize(marks)
-    @frames = create_frames(marks)
+  def initialize(input_score)
+    @frames = create_frames(input_score)
   end
 
   def score
@@ -23,11 +23,11 @@ class Game
 
   private
 
-  def create_frames(marks)
+  def create_frames(input_score)
     frames = []
     index = 0
 
-    marks = marks.split(',')
+    marks = input_score.split(',')
     LAST_FRAME.times do
       if Shot.new(marks[index]).score == 10
         frames << [marks[index]]
