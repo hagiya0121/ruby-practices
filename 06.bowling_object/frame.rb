@@ -1,23 +1,22 @@
 # frozen_string_literal: true
 
 class Frame
-  attr_reader :first_shot, :second_shot, :third_shot
+  attr_reader :shots
 
-  def initialize(first_mark, second_mark = nil, third_mark = nil)
-    @first_shot = Shot.new(first_mark)
-    @second_shot = Shot.new(second_mark)
-    @third_shot = Shot.new(third_mark)
+  def initialize(*marks)
+    @shots = marks.map { |mark| Shot.new(mark) }
   end
 
   def score
-    @first_shot.score + @second_shot.score + @third_shot.score
+    @shots.sum(&:score)
   end
 
   def strike?
-    @first_shot.score == 10
+    @shots[0].score == 10
   end
 
   def spare?
-    @first_shot.score + @second_shot.score == 10 && !@second_shot.mark.nil?
+    return false if @shots[1].nil?
+    @shots[0].score + @shots[1].score == 10
   end
 end

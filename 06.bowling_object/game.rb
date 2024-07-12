@@ -43,15 +43,15 @@ class Game
   end
 
   def next_shot_score(index)
-    @frames[index + 1].first_shot.score
+    @frames[index + 1].shots[0].score
   end
 
   def next_two_shots_score(index)
     next_frame = @frames[index + 1]
     if next_frame.strike? && next_frame != @frames.last
-      10 + @frames[index + 2].first_shot.score
+      10 + @frames[index + 2].shots[0].score
     else
-      next_frame.first_shot.score + next_frame.second_shot.score
+      next_frame.shots[0].score + next_frame.shots[1].score
     end
   end
 end
