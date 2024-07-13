@@ -29,13 +29,9 @@ class Game
 
     marks = input_score.split(',')
     LAST_FRAME.times do
-      if Shot.new(marks[index]).score == 10
-        frame_scores << [marks[index]]
-        index += 1
-      else
-        frame_scores << [marks[index], marks[index + 1]]
-        index += 2
-      end
+      length = Shot.new(marks[index]).score == 10 ? 1 : 2
+      frame_scores << marks[index, length]
+      index += length
     end
     frame_scores << marks[index..]
 
