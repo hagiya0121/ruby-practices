@@ -9,15 +9,15 @@ class Frame
   end
 
   def score(frames)
-      return frame_score if @frame_number == frames.length - 1
+    return frame_score if @frame_number == frames.length - 1
 
-      if strike?
-        frame_score + next_two_shots_score(frames)
-      elsif spare?
-        frame_score + next_shot_score(frames)
-      else
-        frame_score
-      end
+    if strike?
+      frame_score + next_two_shots_score(frames)
+    elsif spare?
+      frame_score + next_shot_score(frames)
+    else
+      frame_score
+    end
   end
 
   def strike?
@@ -28,13 +28,13 @@ class Frame
 
   def spare?
     return false if @shots[1].nil?
+
     @shots[0].score + @shots[1].score == 10
   end
 
   def frame_score
     @shots.sum(&:score)
   end
-
 
   def next_shot_score(frames)
     frames[@frame_number + 1].shots[0].score
