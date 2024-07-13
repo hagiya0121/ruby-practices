@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require 'test/unit'
-require_relative 'shot'
-require_relative 'frame'
-require_relative 'game'
+require_relative '../shot'
+require_relative '../frame'
+require_relative '../game'
 
 class TestBowling < Test::Unit::TestCase
   test 'Shot#socre' do
@@ -22,8 +22,8 @@ class TestBowling < Test::Unit::TestCase
   end
 
   test 'Frame#strike?' do
-    assert_equal true, Frame.new('X').strike?
-    assert_equal false, Frame.new('7', '3').strike?
+    assert Frame.new('X').strike?
+    assert !Frame.new('7', '3').strike?
   end
 
   test 'Game#score' do
