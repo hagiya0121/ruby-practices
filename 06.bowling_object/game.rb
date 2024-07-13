@@ -8,16 +8,8 @@ class Game
   end
 
   def score
-    @frames.each_with_index.sum do |frame, index|
-      next frame.score if index == LAST_FRAME
-
-      if frame.strike?
-        frame.score + next_two_shots_score(index)
-      elsif frame.spare?
-        frame.score + next_shot_score(index)
-      else
-        frame.score
-      end
+    @frames.sum do |frame|
+      frame.score(@frames)
     end
   end
 
@@ -35,19 +27,6 @@ class Game
     end
     frame_scores << marks[index..]
 
-    frame_scores.map { |scores| Frame.new(*scores) }
-  end
-
-  def next_shot_score(index)
-    @frames[index + 1].shots[0].score
-  end
-
-  def next_two_shots_score(index)
-    next_frame = @frames[index + 1]
-    if next_frame.strike? && next_frame != @frames.last
-      10 + @frames[index + 2].shots[0].score
-    else
-      next_frame.shots[0].score + next_frame.shots[1].score
-    end
+    frame_scores.each_with_index.map { |scores, i| Frame.new(*scores, frame_number: i) }
   end
 end
