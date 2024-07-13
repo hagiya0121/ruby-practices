@@ -24,22 +24,22 @@ class Game
   private
 
   def create_frames(input_score)
-    frames = []
+    frame_scores = []
     index = 0
 
     marks = input_score.split(',')
     LAST_FRAME.times do
       if Shot.new(marks[index]).score == 10
-        frames << [marks[index]]
+        frame_scores << [marks[index]]
         index += 1
       else
-        frames << [marks[index], marks[index + 1]]
+        frame_scores << [marks[index], marks[index + 1]]
         index += 2
       end
     end
-    frames << marks[index..]
+    frame_scores << marks[index..]
 
-    frames.map { |frame| Frame.new(*frame) }
+    frame_scores.map { |scores| Frame.new(*scores) }
   end
 
   def next_shot_score(index)
