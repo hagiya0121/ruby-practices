@@ -3,8 +3,8 @@
 class Game
   LAST_FRAME = 9
 
-  def initialize(input_score)
-    @frames = create_frames(input_score)
+  def initialize(input_marks)
+    @frames = create_frames(input_marks)
   end
 
   def score
@@ -15,18 +15,18 @@ class Game
 
   private
 
-  def create_frames(input_score)
-    frame_scores = []
+  def create_frames(input_marks)
+    frame_marks = []
     index = 0
 
-    marks = input_score.split(',')
+    marks = input_marks.split(',')
     LAST_FRAME.times do
       length = Shot.new(marks[index]).score == 10 ? 1 : 2
-      frame_scores << marks[index, length]
+      frame_marks << marks[index, length]
       index += length
     end
-    frame_scores << marks[index..]
+    frame_marks << marks[index..]
 
-    frame_scores.each_with_index.map { |scores, i| Frame.new(*scores, frame_number: i) }
+    frame_marks.each_with_index.map { |marks, i| Frame.new(*marks, frame_number: i) }
   end
 end
