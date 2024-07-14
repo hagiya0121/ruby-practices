@@ -21,7 +21,7 @@ class Game
 
     converted_shots = input_marks.split(',').map { |mark| Shot.new(mark) }
     LAST_FRAME.times do
-      length = converted_shots[index].score == 10 ? 1 : 2
+      length = converted_shots[index].strike? ? 1 : 2
       frame_shots << converted_shots[index, length]
       index += length
     end
