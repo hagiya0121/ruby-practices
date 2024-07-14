@@ -11,6 +11,11 @@ class TestBowling < Test::Unit::TestCase
     assert_equal 1, Shot.new('1').score
   end
 
+  test 'Shot#strike?' do
+    assert Shot.new('X').strike?
+    assert !Shot.new('1').strike?
+  end
+
   test 'Frame#score' do
     frames = []
     shots = ['7', '3', 'X', 'X', 'X', 'X'].map { |m| Shot.new(m) }
@@ -22,10 +27,9 @@ class TestBowling < Test::Unit::TestCase
     assert_equal 30, frames[2].score(frames)
   end
 
-  test 'Frame#strike?' do
-    shots = ['X', '7' '3'].map { |m| Shot.new(m) }
-    assert Frame.new(0, shots[0..0]).strike?
-    assert !Frame.new(1, shots[1..2]).strike?
+  test 'Frame#last?' do
+    assert Frame.new(9, []).last?
+    assert !Frame.new(0, []).last?
   end
 
   test 'Game#score' do
