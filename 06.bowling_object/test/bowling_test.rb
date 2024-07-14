@@ -16,7 +16,7 @@ class TestBowling < Test::Unit::TestCase
     shots = ['7', '3', 'X', 'X', 'X', 'X'].map { |m| Shot.new(m) }
     frames << Frame.new(0, shots[0..1])
     frames << Frame.new(1, shots[2..2])
-    frames << Frame.new(2, shots[3..5])
+    frames << Frame.new(9, shots[3..5])
     assert_equal 20, frames[0].score(frames)
     assert_equal 30, frames[1].score(frames)
     assert_equal 30, frames[2].score(frames)
