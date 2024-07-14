@@ -16,17 +16,17 @@ class Game
   private
 
   def create_frames(input_marks)
-    frame_marks = []
+    frame_shots = []
     index = 0
 
-    marks = input_marks.split(',')
+    shots = input_marks.split(',').map { |mark| Shot.new(mark) }
     LAST_FRAME.times do
-      length = Shot.new(marks[index]).score == 10 ? 1 : 2
-      frame_marks << marks[index, length]
+      length = shots[index].score == 10 ? 1 : 2
+      frame_shots << shots[index, length]
       index += length
     end
-    frame_marks << marks[index..]
+    frame_shots << shots[index..]
 
-    frame_marks.each_with_index.map { |marks, i| Frame.new(*marks, frame_number: i) }
+    frame_shots.each_with_index.map { |shots, i| Frame.new(i, shots) }
   end
 end

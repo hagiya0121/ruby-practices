@@ -13,17 +13,19 @@ class TestBowling < Test::Unit::TestCase
 
   test 'Frame#score' do
     frames = []
-    frames << Frame.new('7', '3', frame_number: 0)
-    frames << Frame.new('X', frame_number: 1)
-    frames << Frame.new('X', 'X', 'X', frame_number: 2)
+    shots = ['7', '3', 'X', 'X', 'X', 'X'].map { |m| Shot.new(m) }
+    frames << Frame.new(0, shots[0..1])
+    frames << Frame.new(1, shots[2..2])
+    frames << Frame.new(2, shots[3..5])
     assert_equal 20, frames[0].score(frames)
     assert_equal 30, frames[1].score(frames)
     assert_equal 30, frames[2].score(frames)
   end
 
   test 'Frame#strike?' do
-    assert Frame.new('X').strike?
-    assert !Frame.new('7', '3').strike?
+    shots = ['X', '7' '3'].map { |m| Shot.new(m) }
+    assert Frame.new(0, shots[0..0]).strike?
+    assert !Frame.new(1, shots[1..2]).strike?
   end
 
   test 'Game#score' do
