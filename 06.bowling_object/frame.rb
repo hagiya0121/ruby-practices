@@ -27,8 +27,7 @@ class Frame
   private
 
   def spare?
-    return false if @shots[1].nil?
-    @shots[0].score + @shots[1].score == 10
+    !strike? && @shots[0].score + @shots[1].score == 10
   end
 
   def frame_score
@@ -45,7 +44,7 @@ class Frame
     if next_frame.strike? && next_frame != frames.last
       10 + frames[@frame_number + 2].shots[0].score
     else
-      next_frame.shots[0].score + next_frame.shots[1].score
+      next_frame.shots[0..1].sum(&:score)
     end
   end
 end
