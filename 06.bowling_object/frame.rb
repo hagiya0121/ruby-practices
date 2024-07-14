@@ -9,15 +9,15 @@ class Frame
   end
 
   def score(frames)
-      return frame_score if last?
+    return frame_score if last?
 
-      if shots[0].strike?
-        frame_score + next_two_shots_score(frames)
-      elsif spare?
-        frame_score + next_shot_score(frames)
-      else
-        frame_score
-      end
+    if shots[0].strike?
+      frame_score + next_two_shots_score(frames)
+    elsif spare?
+      frame_score + next_shot_score(frames)
+    else
+      frame_score
+    end
   end
 
   def last?

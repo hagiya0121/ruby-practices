@@ -19,13 +19,13 @@ class Game
     frame_shots = []
     index = 0
 
-    shots = input_marks.split(',').map { |mark| Shot.new(mark) }
+    converted_shots = input_marks.split(',').map { |mark| Shot.new(mark) }
     LAST_FRAME.times do
-      length = shots[index].score == 10 ? 1 : 2
-      frame_shots << shots[index, length]
+      length = converted_shots[index].score == 10 ? 1 : 2
+      frame_shots << converted_shots[index, length]
       index += length
     end
-    frame_shots << shots[index..]
+    frame_shots << converted_shots[index..]
 
     frame_shots.each_with_index.map { |shots, i| Frame.new(i, shots) }
   end

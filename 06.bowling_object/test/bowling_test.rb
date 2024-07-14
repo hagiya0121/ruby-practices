@@ -18,7 +18,7 @@ class TestBowling < Test::Unit::TestCase
 
   test 'Frame#score' do
     frames = []
-    shots = ['7', '3', 'X', 'X', 'X', 'X'].map { |m| Shot.new(m) }
+    shots = %w[7 3 X X X X].map { |m| Shot.new(m) }
     frames << Frame.new(0, shots[0..1])
     frames << Frame.new(1, shots[2..2])
     frames << Frame.new(9, shots[3..5])
