@@ -21,7 +21,7 @@ class Frame
   end
 
   def last?
-    @frame_number == 9
+    @frame_number == Game::LAST_FRAME
   end
 
   private
