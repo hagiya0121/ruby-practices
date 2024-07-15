@@ -27,6 +27,6 @@ class Game
     end
     shots_by_frame << all_shots[index..]
 
-    shots_by_frame.each_with_index.map { |shots, i| Frame.new(i, shots) }
+    shots_by_frame.map.with_index { |shots, i| Frame.new(i, shots) }
   end
 end
