@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Game
-  LAST_FRAME = 9
-
   def initialize(input_marks)
     @frames = create_frames(input_marks)
   end
@@ -20,7 +18,7 @@ class Game
     index = 0
 
     all_shots = input_marks.split(',').map { |mark| Shot.new(mark) }
-    LAST_FRAME.times do
+    Frame::LAST_FRAME.times do
       length = all_shots[index].strike? ? 1 : 2
       shots_by_frame << all_shots[index, length]
       index += length

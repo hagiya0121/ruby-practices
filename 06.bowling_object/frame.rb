@@ -3,6 +3,8 @@
 class Frame
   attr_reader :shots
 
+  LAST_FRAME = 9
+
   def initialize(frame_number, shots)
     @frame_number = frame_number
     @shots = shots
@@ -25,7 +27,7 @@ class Frame
   end
 
   def last?
-    @frame_number == Game::LAST_FRAME
+    @frame_number == LAST_FRAME
   end
 
   private
