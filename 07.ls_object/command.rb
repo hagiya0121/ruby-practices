@@ -10,6 +10,10 @@ class Command
     @file_path = argv.first || './'
   end
 
+  def contain_file_name?
+    File.file?(@file_path)
+  end
+
   private
 
   def parse_options(argv)
