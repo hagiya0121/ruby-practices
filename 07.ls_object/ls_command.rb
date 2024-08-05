@@ -12,24 +12,26 @@ class LsCommand
   def run
     return PrintFile.print_file_path(@command.file_path) if @command.contain_file_name?
 
-    files = fetch_files
-    files_info = files.map { |file| FileInfo.new(file) }
-
-    PrintFile.print_files(files_info)
+    Dir.chdir(@command.file_path) do
+      files_info = fetch_files.map { |file| FileInfo.new(file) }
+      if @command.options[:long]
+        PrintFile.print_long_files(files_info)
+      else
+        PrintFile.print_files(files_info)
+      end
+    end
   end
 
   private
 
   def fetch_files
-    options = @command.options
-    file_path = @command.file_path
-    files = if options[:all]
-              Dir.entries(file_path).sort
+    files = if @command.options[:all]
+              Dir.entries(@command.file_path).sort
             else
-              Dir.chdir(file_path) { Dir.glob('*').sort }
+              Dir.glob('*').sort
             end
 
-    files.reverse! if options[:reverse]
+    files.reverse! if @command.options[:reverse]
     files
   end
 end
