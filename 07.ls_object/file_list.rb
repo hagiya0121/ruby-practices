@@ -5,7 +5,7 @@ class FileList
 
   def initialize(file_path, has_hidden_file)
     @file_path = file_path
-    @files_info = coreate_files_info(has_hidden_file)
+    @files_info = create_files_info(has_hidden_file)
   end
 
   def reverse
@@ -23,14 +23,14 @@ class FileList
   private
 
   def fetch_files(has_hidden_file)
-    has_hidden_file ? Dir.glob('*', base: @file_path).sort : Dir.entries(@file_path).sort
+    has_hidden_file ? Dir.entries(@file_path).sort : Dir.glob('*', base: @file_path).sort
   end
 
   def fetch_file_stat(file_name)
     Dir.chdir(@file_path) { File.lstat(file_name) }
   end
 
-  def coreate_files_info(has_hidden_file)
+  def create_files_info(has_hidden_file)
     files = fetch_files(has_hidden_file)
     files.map do |file_name|
       file_stat = fetch_file_stat(file_name)

@@ -12,7 +12,7 @@ class LsCommand
   end
 
   def run
-    file_list = FileList.new(@file_path, all: @options[:all])
+    file_list = FileList.new(@file_path, @options[:all])
     file_list.reverse if @options[:reverse]
     print_file = PrintFile.new(file_list)
     return print_file.print_file_path if File.file?(@file_path)
