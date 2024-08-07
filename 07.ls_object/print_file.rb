@@ -21,7 +21,7 @@ class PrintFile
   end
 
   def print_long_files
-    puts "total #{@file_list.total_block}"
+    puts "total #{@file_list.sum_blocks}"
     @files_info.each do |file|
       puts  "#{file.mode}\s\s" \
             "#{file.link.rjust(@file_list.max_length('link'))}\s" \

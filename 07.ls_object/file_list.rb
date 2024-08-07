@@ -3,13 +3,9 @@
 class FileList
   attr_reader :files_info, :file_path
 
-  def initialize(file_path, all: false)
+  def initialize(file_path, has_hidden_file)
     @file_path = file_path
-    @files_info = if all
-                    create_all_files_info
-                  else
-                    create_files_info
-                  end
+    @files_info = coreate_files_info(has_hidden_file)
   end
 
   def reverse
@@ -20,29 +16,25 @@ class FileList
     @files_info.map { |file| file.send(key).length }.max
   end
 
-  def total_block
+  def sum_blocks
     @files_info.sum(&:block)
   end
 
   private
 
-  def create_files_info
-    files = Dir.glob('*', base: @file_path).sort
-    files.map do |name|
-      file_stat = get_file_stat(name)
-      FileInfo.new(name, file_stat)
-    end
+  def fetch_files(has_hidden_file)
+    has_hidden_file ? Dir.glob('*', base: @file_path).sort : Dir.entries(@file_path).sort
   end
 
-  def create_all_files_info
-    files = Dir.entries(@file_path).sort
-    files.map do |name|
-      file_stat = get_file_stat(name)
-      FileInfo.new(name, file_stat)
-    end
+  def fetch_file_stat(file_name)
+    Dir.chdir(@file_path) { File.lstat(file_name) }
   end
 
-  def get_file_stat(name)
-    Dir.chdir(@file_path) { File.lstat(name) }
+  def coreate_files_info(has_hidden_file)
+    files = fetch_files(has_hidden_file)
+    files.map do |file_name|
+      file_stat = fetch_file_stat(file_name)
+      FileInfo.new(file_name, file_stat)
+    end
   end
 end
