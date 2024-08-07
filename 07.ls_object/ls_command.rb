@@ -3,6 +3,7 @@
 require_relative './command'
 require_relative './file_info'
 require_relative './print_file'
+require_relative './file_list'
 
 class LsCommand
   def initialize(command)
@@ -10,29 +11,16 @@ class LsCommand
   end
 
   def run
-    return PrintFile.print_file_path(@command.file_path) if @command.contain_file_name?
+    file_list = FileList.new(@command.file_path, all: @command.options[:all])
+    file_list.reverse if @command.options[:reverse]
+    print_file = PrintFile.new(file_list)
+    return print_file.print_file_path if @command.contain_file_name?
 
-    Dir.chdir(@command.file_path) do
-      files_info = fetch_files.map { |file| FileInfo.new(file) }
-      if @command.options[:long]
-        PrintFile.print_long_files(files_info)
-      else
-        PrintFile.print_files(files_info)
-      end
+    if @command.options[:long]
+      print_file.print_long_files
+    else
+      print_file.print_files
     end
-  end
-
-  private
-
-  def fetch_files
-    files = if @command.options[:all]
-              Dir.entries(@command.file_path).sort
-            else
-              Dir.glob('*').sort
-            end
-
-    files.reverse! if @command.options[:reverse]
-    files
   end
 end
 
