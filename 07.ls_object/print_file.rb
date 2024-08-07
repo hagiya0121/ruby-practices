@@ -16,7 +16,7 @@ class PrintFile
   def print_files
     formatted_files = format_files
     formatted_files.each do |row_files|
-      puts row_files.compact.map { |file| file.name.ljust(@file_list.max_length('name') + PADDING) }.join
+      puts row_files.map { |file| file.name.ljust(@file_list.max_length('name') + PADDING) }.join
     end
   end
 
@@ -33,9 +33,11 @@ class PrintFile
     end
   end
 
+  private
+
   def format_files
     row_count = (@files_info.length.to_f / COLUMN_COUNT).ceil
     filled_files_info = @files_info.dup.fill(nil, @files_info.length...row_count * COLUMN_COUNT)
-    filled_files_info.each_slice(row_count).to_a.transpose
+    filled_files_info.each_slice(row_count).to_a.transpose.map(&:compact)
   end
 end
