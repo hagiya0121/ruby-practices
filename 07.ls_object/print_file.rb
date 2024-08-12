@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class PrintFile
+class FileListPrinter
   COLUMN_COUNT = 3
   PADDING = 4
 
